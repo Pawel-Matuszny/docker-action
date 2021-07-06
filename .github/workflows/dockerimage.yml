@@ -35,9 +35,10 @@ jobs:
       - name: Build and push to the docker-hub
         uses: docker/build-push-action@v2
         with:
+          push: true
+          load: true
           context: ./
           file: ./Dockerfile
-          push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/pawel-falcon:ver1.0
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
