@@ -32,17 +32,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Build Dockerfile
-        uses: docker/build-action@v1
+      - name: Build and push to the docker-hub
+        uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile
+          push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/pawel-falcon:ver1.0
           cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/pawel-falcon:ver1.0
           cache-to: type=inline
-
-      - name: Push to the docker-hub
-        uses: docker/push-action@v1
 
       - name: Check running containers
         run: docker ps
