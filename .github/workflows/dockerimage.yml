@@ -33,6 +33,6 @@ jobs:
       - name: Check running containers
         run: docker ps
 
-     - name: Test falcon app service
-        run: time curl -I localhost:8000 | grep HTTP
+      - name: Test falcon app service
+        run: curl -I localhost:8000 | grep HTTP
         
