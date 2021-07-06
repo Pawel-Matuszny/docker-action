@@ -22,7 +22,7 @@ jobs:
 
       - name: Build docker-compose stack
         id: docker_build
-        run: docker-compose -f docker-compose.yml up -d
+        run: docker-compose -f docker-compose.yml up -d --build
       
       - name: Check folder
         run: pwd
@@ -32,7 +32,4 @@ jobs:
 
       - name: Check running containers
         run: docker ps
-
-      - name: Test falcon app service
-        run: curl -I localhost:8000 | grep HTTP
         
