@@ -14,12 +14,12 @@ jobs:
       
       - name: Build an image from Dockerfile
         run: |
-          docker-compose -f docker-compose.yml up -d falcon --build
+          docker-compose -f docker-compose.yml up -d --build
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '$(docker-compose ps -q falcon)'
+          image-ref: 'falcon_web'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
