@@ -38,7 +38,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           docker-compose build pawel-falcon
-          docker save pawel-falcon $(docker history -q pawel-falcon | awk '!/<missing>/{print}') > pawel-falcon.tar
+          docker save pawel-falcon:ver1.0 $(docker history -q pawel-falcon:ver1.0 | awk '!/<missing>/{print}') > pawel-falcon.tar
           mkdir docker-cache
           split -b 100m pawel-falcon.tar docker-cache/x
           rm -rf pawel-falcon.tar

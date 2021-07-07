@@ -1,8 +1,11 @@
 version: '3.3'
 services:
     pawel-falcon:
-        build: .
+        build: 
+            context: .
+            cache_from: pawel-falcon:ver1.0
         ports:
             - "8000:8000"
         volumes:
             - .:/app
+        image: pawel-falcon:ver1.0
