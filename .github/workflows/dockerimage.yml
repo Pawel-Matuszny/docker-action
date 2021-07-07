@@ -3,6 +3,8 @@ name: CI to Docker Hub
 on:
   push:
     branches: master
+  pull_request:
+    branches: master
 
 jobs:
 
@@ -38,8 +40,11 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
+        env:
+          tag-name: pawel-falcon
+          image-version: ver1.0
         with:
-          image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/pawel-falcon:ver1.0'
+          image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.tag-name }}:${{ env.image-version }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
