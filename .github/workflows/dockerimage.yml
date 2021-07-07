@@ -32,19 +32,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Build and push to the docker-hub
-        uses: docker/build-push-action@v2
-        with:
-          push: false
-          load: true
-          context: ./
-          file: ./Dockerfile
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/pawel-falcon:ver1.0
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-
-      - name: Image digest output
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Build dockerimage
+        run: docker-compose up --build
 
       - name: Check running containers
         run: docker ps
