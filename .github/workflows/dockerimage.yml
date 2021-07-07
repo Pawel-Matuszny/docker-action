@@ -29,6 +29,9 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+      
+      - name: Check /var/lib/docker files
+        run: ls /var/lib/docker
 
-      - name: Check running containers
-        run: docker ps
+      - name: Check again building caches
+        run: docker-compose build
