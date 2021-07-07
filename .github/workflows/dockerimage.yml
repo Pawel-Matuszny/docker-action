@@ -10,6 +10,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    env:
+      tag-name: pawel-falcon
+      version: ver1.0
     
     steps:
     
@@ -28,31 +31,28 @@ jobs:
       - name: Load cached Docker layers
         run: |
           if [ -d "docker-cache" ]; then
-            cat docker-cache/x* > pawel-falcon.tar
-            docker load < pawel-falcon.tar
+            cat docker-cache/x* > ${{ env.tag-name }}.tar
+            docker load < ${{ env.tag-name }}.tar
             rm -rf docker-cache
-            rm -rf pawel-falcon.tar
+            rm -rf ${{ env.tag-name }}.tar
           fi
       
       - name: Build image
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          docker-compose build pawel-falcon
-          docker save pawel-falcon:ver1.0 $(docker history -q pawel-falcon:ver1.0 | awk '!/<missing>/{print}') > pawel-falcon.tar
+          docker-compose build ${{ env.tag-name }}
+          docker save ${{ env.tag-name }}:${{ env.version }} $(docker history -q ${{ env.tag-name }}:${{ env.version }} | awk '!/<missing>/{print}') > ${{ env.tag-name }}.tar
           mkdir docker-cache
-          split -b 100m pawel-falcon.tar docker-cache/x
-          rm -rf pawel-falcon.tar
+          split -b 100m ${{ env.tag-name }}.tar docker-cache/x
+          rm -rf ${{ env.tag-name }}.tar
       
       - name: Check docker info
         run: docker info
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
-        env:
-          tag-name: pawel-falcon
-          image-version: ver1.0
         with:
-          image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.tag-name }}:${{ env.image-version }}'
+          image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.tag-name }}:${{ env.version }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
