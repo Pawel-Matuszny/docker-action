@@ -16,21 +16,32 @@ jobs:
       - name: Check Out Repo 
         uses: actions/checkout@v2
 
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-dock
+      - name: Load Cache Keys
+        uses: actions/cache@v1
+        id: cache
         with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: /var/lib/docker
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Dockerfile') }}
+          path: docker-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+            ${{ runner.os }}-docker-
       
-      - name: Build dockerimage
-        run: docker-compose build
+      - name: Load cached Docker layers
+        run: |
+          if [ -d "docker-cache" ]; then
+            cat docker-cache/x* > pawel-falcon.tar
+            docker load < pawel-falcon.tar
+            rm -rf docker-cache
+            rm -rf pawel-falcon.tar
+          fi
+      
+      - name: Build image
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          docker-compose build pawel-falcon
+          docker save my-app $(docker history -q my-app | awk '!/<missing>/{print}') > pawel-falcon.tar
+          mkdir docker-cache
+          split -b 100m pawel-falcon.tar docker-cache/x
+          rm -rf pawel-falcon.tar
       
       - name: Check docker info
         run: docker info
