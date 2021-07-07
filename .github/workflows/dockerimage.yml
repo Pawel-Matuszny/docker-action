@@ -16,9 +16,6 @@ jobs:
       - name: Check Out Repo 
         uses: actions/checkout@v2
 
-      - name: Build dockerimage
-        run: docker-compose build
-
       - name: Cache node modules
         uses: actions/cache@v2
         env:
@@ -31,6 +28,9 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
+      
+      - name: Build dockerimage
+        run: docker-compose build
       
       - name: Check docker info
         run: docker info
