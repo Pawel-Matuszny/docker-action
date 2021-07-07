@@ -7,5 +7,5 @@ RUN apt-get update &&\
 RUN mkdir /app
 WORKDIR /app
 COPY . /app
-EXPOSE 8001
+EXPOSE 8000
 CMD ["python3", "app.py"]
