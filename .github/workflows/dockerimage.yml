@@ -30,8 +30,8 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       
-      - name: Check /var/lib/docker files
-        run: ls /var/lib/docker
+      - name: Check docker info
+        run: docker info
 
       - name: Check again building caches
         run: docker-compose build
